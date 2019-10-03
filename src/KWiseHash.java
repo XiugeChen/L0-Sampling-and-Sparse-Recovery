@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
  * xiugec 961392
  * Xiuge Chen
  * xiugec@student.unimelb.edu.au
+ * @author xiugechen
  */
 public class KWiseHash implements IHash {
 	/** logger */
