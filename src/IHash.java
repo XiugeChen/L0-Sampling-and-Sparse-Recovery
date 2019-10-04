@@ -10,7 +10,7 @@ public interface IHash {
 	/**
 	 * Hash a specific key to range [0, ..., domain-1] based on the propriety of hash function.
 	 * @param key Key
-	 * @param domain Output domain 
+	 * @param domain Output domain, range [0, 2^31 - 1]
 	 * @return Hashed value within range [0, ..., domain-1]
 	 */
 	public abstract int hash(Object key, int domain);

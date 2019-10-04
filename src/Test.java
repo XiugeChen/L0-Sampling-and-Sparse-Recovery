@@ -7,9 +7,9 @@
  * @author xiugechen
  */
 public class Test {
-	
 	public static void main(String[] args) {
 		// KWiseHashTest();
+		L0Sampler_InsertionOnlyTest();
 	}
 	
 	/**
@@ -36,7 +36,7 @@ public class Test {
 			int index = 0;
 			
 			for (int j = 0; j < keys.length; j++) {
-				index += (int) ((int) hash.hash(keys[j], domain) * Math.pow(domain, j));
+				index += (int) (hash.hash(keys[j], domain) * Math.pow(domain, j));
 			}
 			
 			results[index]++;
@@ -44,6 +44,52 @@ public class Test {
 		
 		for (int i = 0; i < results.length; i++) {
 			System.out.println(i + ": " + (double)results[i] / numExperiments);
+		}
+	}
+	
+	/**
+	 * Test whether L0Sampler_InsertionOnly performs in expectation (uniform selection over insertion-only stream)
+	 */
+	public static void L0Sampler_InsertionOnlyTest() {
+		// settings
+		int domain = Integer.MAX_VALUE;
+		double epsilon = 0.01;
+		double percentage0 = 0.1;
+		int numExperiments = 1000;
+		int numDraw = 100;
+		
+		int realDistribution[] = {0, 0};
+		int results[] = {0, 0};
+		
+		// run numExperiments number of experiments on designed unequally distributed stream
+		// see if items are selected uniformly
+		for (int i = 0; i < numExperiments; i++) {
+			IL0Sampler sampler = new L0Sampler_InsertionOnly(domain, epsilon);
+			
+			for (int j = 0; j < numDraw; j++) {
+				if (StdRandom.uniform((int)(1 / percentage0) ) >= 1) {
+					sampler.update("1", 1);
+					realDistribution[1]++;
+				}
+				else {
+					sampler.update("0", 1);
+					realDistribution[0]++;
+				}
+			}
+			
+			Object output = sampler.output();
+			
+			if (output.equals("1")) {
+				results[1]++;
+			}
+			else if (output.equals("0")) {
+				results[0]++;
+			}
+		}
+		
+		for (int i = 0; i < results.length; i++) {
+			System.out.println("Real " + i + ": " + (double)results[i] / numExperiments);
+			System.out.println("Sampled " + i + ": " + (double)realDistribution[i] / numExperiments / numDraw);
 		}
 	}
 }
