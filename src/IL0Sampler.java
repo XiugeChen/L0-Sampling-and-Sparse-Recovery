@@ -16,7 +16,7 @@ public interface IL0Sampler {
 	
 	/**
 	 * Output a uniformly selected item with non-zero frequency.
-	 * @return
+	 * @return Uniformly selected item
 	 */
 	public Object output();
 }

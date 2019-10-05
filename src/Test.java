@@ -9,7 +9,8 @@
 public class Test {
 	public static void main(String[] args) {
 		// KWiseHashTest();
-		L0Sampler_InsertionOnlyTest();
+		// L0Sampler_InsertionOnlyTest();
+		SparseRecoveryTest(1);
 	}
 	
 	/**
@@ -90,6 +91,59 @@ public class Test {
 		for (int i = 0; i < results.length; i++) {
 			System.out.println("Real " + i + ": " + (double)results[i] / numExperiments);
 			System.out.println("Sampled " + i + ": " + (double)realDistribution[i] / numExperiments / numDraw);
+		}
+	}
+	
+	/**
+	 * Test whether k-Sparse Recovery performs in expectation (output item-value pair if the stream only has one item,
+	 * message report if the stream has 0 or more than 1 items)
+	 */
+	public static void SparseRecoveryTest(int k) {
+		// settings
+		int maxNumItems = 4;
+		int numDraw = 1000;
+		int numExperiments = 10000;
+		
+		// run numExperiments experiments for different number of items from 1 to maxNumItems
+		for (int i = 1; i <= maxNumItems; i++) {
+			ISparseRecovery sparseRecovery = null;
+			double zeroCount = 0;
+			double moreCount = 0;
+			double kCount = 0;
+			
+			for (int l = 0; l < numExperiments; l++) {
+				if (k == 1) {
+					sparseRecovery = new OneSparseRecovery();
+				} 
+				else {
+					// sparseRecovery = new SparseRecovery_k(k);
+				}
+				
+				for (int j = 0; j < numDraw; j++) {
+					// randomly init item and update
+					Object item = Integer.toString(StdRandom.uniform(i) + 1);
+					int update = StdRandom.uniform(2) == 0 ? 2 : -1;
+					
+					sparseRecovery.update(item, update);
+				}
+				
+				Object output = sparseRecovery.output();
+				
+				if (output.equals("zero items in the stream")) {
+					zeroCount++;
+				}
+				else if (output.equals("more than one item in the stream")) {
+					moreCount++;
+				}
+				else {
+					kCount++;
+				}
+			}
+			
+			System.out.println("####INFO: result for " + i + " items");
+			System.out.println("Count for zero items output: " + zeroCount / numExperiments);
+			System.out.println("Count for more than k items output: " + moreCount / numExperiments);
+			System.out.println("Count for k items output: " + kCount / numExperiments);
 		}
 	}
 }
