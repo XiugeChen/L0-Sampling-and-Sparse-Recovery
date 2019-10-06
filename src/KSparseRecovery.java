@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * K Sparse recovery data structure that could work over arbitrary integer vectors.
@@ -60,7 +59,7 @@ public class KSparseRecovery implements ISparseRecovery {
 	@Override
 	public Object output() {
 		// variables stores recovered item and its frequency
-		ArrayList<Object> items = new ArrayList<>();
+		ArrayList<String> items = new ArrayList<>();
 		ArrayList<Integer> frequencies = new ArrayList<>();
 		// lower bound of number of total items
 		int lowerboundTotal = 0;
@@ -77,20 +76,19 @@ public class KSparseRecovery implements ISparseRecovery {
 					lowerboundRow += 2;
 				}
 				else if (!output.equals(OneSparseRecovery.ZERO_SPARSE)) {
-					// cast the output object to list of item-frequency pair and take the first one
-					ArrayList<HashMap<Object, Integer>> outputList = (ArrayList<HashMap<Object, Integer>>) output;
-					HashMap<Object, Integer> outputMap = outputList.get(0);
+					// cast the output object to String of item-frequency pair
+					String[] outputPair = ((String) output).split(",");
+					String item = outputPair[0];
+					Integer frequency = Integer.parseInt(outputPair[1]);
 					
-					for (Object key : outputMap.keySet()) {
-						// if one new item is recovered, add it to the return variables
-						if (!items.contains(key)) {
-							items.add(key);
-							frequencies.add(outputMap.get(key));
-						}
-						// if the item recovered is appeared before, update its frequency only if a smaller frequency is observered
-						else if (frequencies.get(items.indexOf(key)) > outputMap.get(key)) {
-							frequencies.set(items.indexOf(key), outputMap.get(key));
-						}
+					// if one new item is recovered, add it to the return variables
+					if (!items.contains(item)) {
+						items.add(item);
+						frequencies.add(frequency);
+					}
+					// if the item recovered is appeared before, update its frequency only if a smaller frequency is observered
+					else if (frequencies.get(items.indexOf(item)) > frequency) {
+						frequencies.set(items.indexOf(item), frequency);
 					}
 					
 					lowerboundRow += 1;
@@ -103,26 +101,24 @@ public class KSparseRecovery implements ISparseRecovery {
 		}
 		
 		if (lowerboundTotal > k) {
-			return this.MORE_K_SPARSE;
+			return MORE_K_SPARSE;
 		}
 		
 		if (items.size() == 0) {
-			return this.ZERO_SPARSE;
+			return ZERO_SPARSE;
 		}
 		else if (items.size() <= k) {
-			// assembly the output results (list of item-frequency pair)
-			ArrayList<HashMap<Object, Integer>> results = new ArrayList<>();
+			// assembly the output results (n rows of item-frequency pair)
+			String results = new String("");
 			
 			for (int i = 0; i < items.size(); i++) {
-				HashMap<Object, Integer> map = new HashMap<>();
-				map.put(items.get(i), frequencies.get(i));
-				results.add(map);
+				results += String.format("%s,%d\n", items.get(i), frequencies.get(i));
 			}
 			
 			return results;
 		}
 		
-		return this.MORE_K_SPARSE;
+		return MORE_K_SPARSE;
 	}
 
 }

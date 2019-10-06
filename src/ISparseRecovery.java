@@ -17,7 +17,7 @@ public interface ISparseRecovery {
 	/**
 	 * Output k item-frequency pair object if the stream is k-sparse
 	 * Otherwise, output warning String indicates whether there are 0 or more than k items in the stream
-	 * @return An ArrayList contains k item-frequency pairs (hashMap) or a String message that reports non k-sparse.
+	 * @return An String contains k rows of item-frequency pair (item,frequency) or a String message that reports non k-sparse.
 	 */
 	public Object output();
 }

@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -20,7 +17,7 @@ public class OneSparseRecovery implements ISparseRecovery {
 	/** logger */
 	private final static Logger logger = Logger.getLogger(OneSparseRecovery.class);
 	/** large enough prime */
-	private static final int P = Integer.MAX_VALUE;
+	private final int P = Integer.MAX_VALUE;
 	
 	/** weighted sum of item identifiers */
 	private long iota;
@@ -70,13 +67,7 @@ public class OneSparseRecovery implements ISparseRecovery {
 		
 		// if the stream is 1 sparse, output a list contains this item and frequency pair
 		if (tau == estimated) {
-			ArrayList<HashMap<Object, Integer>> result = new ArrayList<>();
-			
-			HashMap<Object, Integer> pairMap = new HashMap<>();
-			Object item = Long.toString((long) (iota / phi));
-			pairMap.put(item, (int) phi);
-			
-			result.add(pairMap);
+			String result = String.format("%d,%d", (int) (iota / phi), (int) phi);
 			return result;
 		}
 		

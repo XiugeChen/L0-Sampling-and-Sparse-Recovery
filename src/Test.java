@@ -9,7 +9,7 @@
 public class Test {
 	public static void main(String[] args) {
 		// KWiseHashTest();
-		// L0Sampler_InsertionOnlyTest();
+		L0SamplerTest(false);
 		// SparseRecoveryTest(1);
 		// SparseRecoveryTest(4);
 	}
@@ -50,38 +50,58 @@ public class Test {
 	}
 	
 	/**
-	 * Test whether L0Sampler_InsertionOnly performs in expectation (uniform selection over insertion-only stream)
+	 * Test whether L0Sampler performs in expectation (uniform selection over insertion-only stream)
+	 * @param insertionOnly Whether the stream is insertion-only
 	 */
-	public static void L0Sampler_InsertionOnlyTest() {
+	public static void L0SamplerTest(boolean insertionOnly) {
 		// settings
-		int domain = Integer.MAX_VALUE;
+		int domain = 1000;
 		double epsilon = 0.01;
 		double percentage0 = 0.1;
 		int numExperiments = 1000;
 		int numDraw = 100;
 		
-		int realDistribution[] = {0, 0};
-		int results[] = {0, 0};
+		int realDistribution[] = {0, 0, 0};
+		int results[] = {0, 0, 0};
 		
 		// run numExperiments number of experiments on designed unequally distributed stream
 		// see if items are selected uniformly
 		for (int i = 0; i < numExperiments; i++) {
-			IL0Sampler sampler = new L0Sampler_InsertionOnly(domain, epsilon);
+			IL0Sampler sampler = null;
+			
+			if (insertionOnly) {
+				sampler = new L0Sampler_InsertionOnly(domain, epsilon);
+			}
+			else {
+				sampler = new L0Sampler_General(domain, epsilon);
+			}
+			
 			
 			for (int j = 0; j < numDraw; j++) {
+				int update0 = 1;
+				int update1 = 1;
+				
+				if (!insertionOnly) {
+					update0 = StdRandom.uniform(2) == 0 ? 1 : -1;
+					update1 = StdRandom.uniform(2) == 0 ? 1 : -1;
+				}
+				
 				if (StdRandom.uniform((int)(1 / percentage0) ) >= 1) {
-					sampler.update("1", 1);
+					sampler.update("1", update1);
 					realDistribution[1]++;
 				}
 				else {
-					sampler.update("0", 1);
+					sampler.update("0", update0);
 					realDistribution[0]++;
 				}
 			}
 			
-			Object output = sampler.output();
+			String output = (String) sampler.output();
 			
-			if (output.equals("1")) {
+			if (output.equals(L0Sampler_General.FAIL)) {
+				results[2]++;
+			}
+			else if (output.equals("1")) {
 				results[1]++;
 			}
 			else if (output.equals("0")) {
@@ -89,10 +109,11 @@ public class Test {
 			}
 		}
 		
-		for (int i = 0; i < results.length; i++) {
+		for (int i = 0; i < results.length - 1; i++) {
 			System.out.println("Real " + i + ": " + (double)results[i] / numExperiments);
 			System.out.println("Sampled " + i + ": " + (double)realDistribution[i] / numExperiments / numDraw);
 		}
+		System.out.println("Failed: " + (double)results[results.length - 1] / numExperiments);
 	}
 	
 	/**
@@ -124,7 +145,7 @@ public class Test {
 				for (int j = 0; j < numDraw; j++) {
 					// randomly init item and update
 					Object item = Integer.toString(StdRandom.uniform(i) + 1);
-					int update = StdRandom.uniform(2) == 0 ? 100 : 1;
+					int update = StdRandom.uniform(2) == 0 ? 5 : 1;
 					
 					sparseRecovery.update(item, update);
 				}
