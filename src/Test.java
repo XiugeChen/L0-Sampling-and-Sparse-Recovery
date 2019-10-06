@@ -10,7 +10,8 @@ public class Test {
 	public static void main(String[] args) {
 		// KWiseHashTest();
 		// L0Sampler_InsertionOnlyTest();
-		SparseRecoveryTest(1);
+		// SparseRecoveryTest(1);
+		// SparseRecoveryTest(4);
 	}
 	
 	/**
@@ -19,7 +20,7 @@ public class Test {
 	public static void KWiseHashTest() {
 		// settings, do not set k or domain to be too large
 		int k = 2;
-		int domain = 3;
+		int domain = 4;
 		int numExperiments = 1000000;
 		
 		// keys initialization
@@ -100,9 +101,10 @@ public class Test {
 	 */
 	public static void SparseRecoveryTest(int k) {
 		// settings
-		int maxNumItems = 4;
-		int numDraw = 1000;
+		int maxNumItems = 8;
+		int numDraw = 100;
 		int numExperiments = 10000;
+		double delta = 0.001;
 		
 		// run numExperiments experiments for different number of items from 1 to maxNumItems
 		for (int i = 1; i <= maxNumItems; i++) {
@@ -116,23 +118,23 @@ public class Test {
 					sparseRecovery = new OneSparseRecovery();
 				} 
 				else {
-					// sparseRecovery = new SparseRecovery_k(k);
+					sparseRecovery = new KSparseRecovery(k, delta);
 				}
 				
 				for (int j = 0; j < numDraw; j++) {
 					// randomly init item and update
 					Object item = Integer.toString(StdRandom.uniform(i) + 1);
-					int update = StdRandom.uniform(2) == 0 ? 2 : -1;
+					int update = StdRandom.uniform(2) == 0 ? 100 : 1;
 					
 					sparseRecovery.update(item, update);
 				}
 				
 				Object output = sparseRecovery.output();
 				
-				if (output.equals("zero items in the stream")) {
+				if (output.equals(OneSparseRecovery.ZERO_SPARSE) || output.equals(KSparseRecovery.ZERO_SPARSE)) {
 					zeroCount++;
 				}
-				else if (output.equals("more than one item in the stream")) {
+				else if (output.equals(OneSparseRecovery.MORE_K_SPARSE) || output.equals(KSparseRecovery.MORE_K_SPARSE)) {
 					moreCount++;
 				}
 				else {
