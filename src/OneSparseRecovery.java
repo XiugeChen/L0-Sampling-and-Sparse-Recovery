@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
@@ -67,11 +68,15 @@ public class OneSparseRecovery implements ISparseRecovery {
 		this.tau = this.tau % P;
 		long estimated = (long) ((phi * powMod(z, (int) (iota/phi), this.P)) % P);
 		
-		// if the stream is 1 sparse, output this item and update
+		// if the stream is 1 sparse, output a list contains this item and frequency pair
 		if (tau == estimated) {
-			HashMap<Object, Integer> result = new HashMap<>();
+			ArrayList<HashMap<Object, Integer>> result = new ArrayList<>();
+			
+			HashMap<Object, Integer> pairMap = new HashMap<>();
 			Object item = Long.toString((long) (iota / phi));
-			result.put(item, (int) phi);
+			pairMap.put(item, (int) phi);
+			
+			result.add(pairMap);
 			return result;
 		}
 		
@@ -81,14 +86,14 @@ public class OneSparseRecovery implements ISparseRecovery {
 	
 	/**
 	 * Calculate the result of the power of some int number mod another number
-	 * Avoiding overflow
+	 * This implementation avoids potential overflow
 	 * @param base Base number, int
 	 * @param power Power number, int
 	 * @param modNum Number used to mod, int
 	 * @return base^power mod modNum
 	 */
-	private int powMod(int base, int power, int modNum) {
-		int result = 1;
+	private long powMod(int base, int power, int modNum) {
+		long result = 1;
 		for (int i = 0; i < power; i++) {
 			result *= base;
 			result %= modNum;

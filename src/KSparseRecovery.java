@@ -59,8 +59,10 @@ public class KSparseRecovery implements ISparseRecovery {
 
 	@Override
 	public Object output() {
+		// variables stores recovered item and its frequency
 		ArrayList<Object> items = new ArrayList<>();
 		ArrayList<Integer> frequencies = new ArrayList<>();
+		// lower bound of number of total items
 		int lowerboundTotal = 0;
 		
 		// loop through all one sparse recovery structure, extract the unique item stored if there is one
@@ -70,19 +72,24 @@ public class KSparseRecovery implements ISparseRecovery {
 			for (int j = 0; j < cells[i].length; j++) {
 				Object output = cells[i][j].output();
 				
+				// if get MORE_K_SPARSE message, means at least 2 items are hashed into this cell
 				if (output.equals(OneSparseRecovery.MORE_K_SPARSE)) {
 					lowerboundRow += 2;
 				}
 				else if (!output.equals(OneSparseRecovery.ZERO_SPARSE)) {
-					HashMap<Object, Integer> map = (HashMap<Object, Integer>) output;
+					// cast the output object to list of item-frequency pair and take the first one
+					ArrayList<HashMap<Object, Integer>> outputList = (ArrayList<HashMap<Object, Integer>>) output;
+					HashMap<Object, Integer> outputMap = outputList.get(0);
 					
-					for (Object key : map.keySet()) {
+					for (Object key : outputMap.keySet()) {
+						// if one new item is recovered, add it to the return variables
 						if (!items.contains(key)) {
 							items.add(key);
-							frequencies.add(map.get(key));
+							frequencies.add(outputMap.get(key));
 						}
-						else if (frequencies.get(items.indexOf(key)) > map.get(key)) {
-							frequencies.set(items.indexOf(key), map.get(key));
+						// if the item recovered is appeared before, update its frequency only if a smaller frequency is observered
+						else if (frequencies.get(items.indexOf(key)) > outputMap.get(key)) {
+							frequencies.set(items.indexOf(key), outputMap.get(key));
 						}
 					}
 					
@@ -103,6 +110,7 @@ public class KSparseRecovery implements ISparseRecovery {
 			return this.ZERO_SPARSE;
 		}
 		else if (items.size() <= k) {
+			// assembly the output results (list of item-frequency pair)
 			ArrayList<HashMap<Object, Integer>> results = new ArrayList<>();
 			
 			for (int i = 0; i < items.size(); i++) {
