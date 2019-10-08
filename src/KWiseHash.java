@@ -55,9 +55,9 @@ public class KWiseHash implements IHash {
 		// get Polynomial Hashing results
 		long results = 0;
 		for (int i = 0; i < a.length; i++) {
-			results += a[i] * Math.pow(key_int, i) % domain;
+			results += (a[i] * Math.pow(key_int, i)) % P;
 		}
 		
-		return (int) (results % domain);
+		return (int) ((results % P) % domain);
 	}
 }

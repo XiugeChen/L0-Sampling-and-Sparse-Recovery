@@ -8,8 +8,8 @@
  */
 public class Test {
 	public static void main(String[] args) {
-		// KWiseHashTest();
-		L0SamplerTest(false);
+		KWiseHashTest();
+		// L0SamplerTest(false);
 		// SparseRecoveryTest(1);
 		// SparseRecoveryTest(4);
 	}
