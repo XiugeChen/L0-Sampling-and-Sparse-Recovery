@@ -12,7 +12,7 @@ public class L0Sampler_General extends L0Sampler {
 	public L0Sampler_General(int domain, double delta) {
 		super(domain, delta);
 		
-		int k = (int) (12 * Math.log(1 / delta));
+		int k = (int)(12 * (Math.log(1 / delta) / Math.log(2) + 1e-10));
 		
 		for (int i = 0; i < L; i++) {
 			K[i] = new KSR_General(k, delta);

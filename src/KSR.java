@@ -29,7 +29,7 @@ public abstract class KSR implements ISparseRecovery {
 	 * @param delta Error rate
 	 */
 	public KSR(int k, double delta) {
-		int numRows = (int) Math.log(k / delta);
+		int numRows = (int) (Math.log(k / delta) / Math.log(2) + 1e-10);
 		this.k = k;
 		this.domain = 2 * k;
 		MORE_K_SPARSE = "more than " + k + " items in the stream";
@@ -39,7 +39,7 @@ public abstract class KSR implements ISparseRecovery {
 			hashs[i] = new KWiseHash(2);
 		}
 		
-		this.cells = new OneSR_General[numRows][domain];
+		this.cells = new ISparseRecovery[numRows][domain];
 	}
 
 	@Override

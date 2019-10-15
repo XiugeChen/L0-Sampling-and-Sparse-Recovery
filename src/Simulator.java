@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 public class Simulator {
 	private static final String FOLDER = "resources/data/dataWithUpdate/";
 	private static final String FILE_PATH = "resources/data/dataWithUpdate/space_time_test.txt";
-	private static final double ERROR = 0.001;
-	private static final double BAD_PROB = 0.001;
+	private static final double ERROR = 0.01;
+	private static final double BAD_PROB = 0.01;
 	private static final int DOMAIN = Integer.MAX_VALUE;
 	private static final int NUM_EXPERIMENT = 10000;
 

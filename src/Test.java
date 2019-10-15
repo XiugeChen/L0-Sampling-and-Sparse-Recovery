@@ -10,12 +10,18 @@ public class Test {
 	private static final String INSERTION_ONLY = "insertion-only";
 	private static final String TURNSTILE = "turnstile";
 	private static final String GENERAL = "general";
+	private static final String PAIRWISE = "pairwise";
 	
 	public static void main(String[] args) {
-		KWiseHashTest();
-		// L0SamplerTest(GENERAL);
+		System.out.println("####INFO: Test starts");
+		
+		// KWiseHashTest();
+		L0SamplerTest(PAIRWISE);
 		// SparseRecoveryTest(1);
 		// SparseRecoveryTest(4);
+		// DistinctElementTest(9009);
+		
+		System.out.println("####INFO: Test ends");
 	}
 	
 	/**
@@ -24,7 +30,7 @@ public class Test {
 	public static void KWiseHashTest() {
 		// settings, do not set k or domain to be too large
 		int k = 2;
-		int domain = 4;
+		int domain = 2;
 		int numExperiments = 1000000;
 		
 		// keys initialization
@@ -59,10 +65,11 @@ public class Test {
 	 */
 	public static void L0SamplerTest(String streamType) {
 		// settings
-		int domain = 1000;
+		int domain = 3;
 		double epsilon = 0.01;
+		double delta = 0.01;
 		double percentage0 = 0.1;
-		int numExperiments = 1000;
+		int numExperiments = 100;
 		int numDraw = 100;
 		
 		int realDistribution[] = {0, 0, 0};
@@ -79,26 +86,29 @@ public class Test {
 			else if (streamType.equals(TURNSTILE)) {
 				sampler = new L0Sampler_Turnstile(domain, epsilon);
 			}
-			else {
+			else if (streamType.equals(GENERAL)){
 				sampler = new L0Sampler_General(domain, epsilon);
+			}
+			else {
+				sampler = new L0Sampler_Pairwise_General(domain, epsilon, delta);
 			}
 			
 			
 			for (int j = 0; j < numDraw; j++) {
-				int update0 = 1;
 				int update1 = 1;
+				int update2 = 1;
 				
 				if (!streamType.equals(INSERTION_ONLY)) {
-					update0 = StdRandom.uniform(2) == 0 ? 1 : -1;
-					update1 = StdRandom.uniform(2) == 0 ? 1 : -1;
+					update1 = StdRandom.uniform(2) == 0 ? 5 : -1;
+					update2 = StdRandom.uniform(2) == 0 ? 5 : -1;
 				}
 				
 				if (StdRandom.uniform((int)(1 / percentage0) ) >= 1) {
-					sampler.update("1", update1);
+					sampler.update("2", update2);
 					realDistribution[1]++;
 				}
 				else {
-					sampler.update("0", update0);
+					sampler.update("1", update1);
 					realDistribution[0]++;
 				}
 			}
@@ -108,17 +118,17 @@ public class Test {
 			if (output.equals(L0Sampler.FAIL)) {
 				results[2]++;
 			}
-			else if (output.equals("1")) {
+			else if (output.equals("2")) {
 				results[1]++;
 			}
-			else if (output.equals("0")) {
+			else if (output.equals("1")) {
 				results[0]++;
 			}
 		}
 		
 		for (int i = 0; i < results.length - 1; i++) {
-			System.out.println("Real " + i + ": " + (double)results[i] / numExperiments);
-			System.out.println("Sampled " + i + ": " + (double)realDistribution[i] / numExperiments / numDraw);
+			System.out.println("Sampled " + (i+1) + ": " + (double)results[i] / numExperiments);
+			System.out.println("Real " + (i+1) + ": " + (double)realDistribution[i] / numExperiments / numDraw);
 		}
 		System.out.println("Failed: " + (double)results[results.length - 1] / numExperiments);
 	}
@@ -175,5 +185,25 @@ public class Test {
 			System.out.println("Count for more than k items output: " + moreCount / numExperiments);
 			System.out.println("Count for k items output: " + kCount / numExperiments);
 		}
+	}
+	
+	private static void DistinctElementTest(int numDistinctItems) {
+		System.out.println("####INFO: DistinctElementTest started");
+		
+		int domain = (int) Math.pow(10, 8);
+		double epsilon = 0.01;
+		double delta = 0.01;
+		
+		DistinctElement de = new DistinctElement(domain, epsilon, delta);
+		
+		for (int i = 1; i <= numDistinctItems; i++) {
+			String item = Integer.toString(i);
+			int update = 1;
+			
+			de.update(item, update);
+		}
+		
+		System.out.println("Real distinct items: " + numDistinctItems);
+		System.out.println("Estimated distinct items: " + de.output());
 	}
 }

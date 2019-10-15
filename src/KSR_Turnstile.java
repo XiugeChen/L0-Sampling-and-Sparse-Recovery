@@ -8,6 +8,7 @@
  * @author xiugechen
  */
 public class KSR_Turnstile extends KSR {
+	
 	public KSR_Turnstile(int k, double delta) {
 		super(k, delta);
 		

@@ -31,12 +31,12 @@ public abstract class L0Sampler implements IL0Sampler {
 		}
 		
 		// k-sparse parameter k and t-wise hash parameter t
-		int k = (int) (12 * Math.log(1 / delta));
+		int k = (int)(12 * (Math.log(1 / delta) / Math.log(2) + 1e-10));
 		int t = k / 2 + 1;
 		
 		this.hashedDomain = (int) Math.pow(domain, 3);
 		this.hash = new KWiseHash(t);
-		this.L = (int) Math.log(domain);
+		this.L = (int)(Math.log(domain) / Math.log(2) + 1e-10);
 		
 		this.K = new KSR[L];
 	}
