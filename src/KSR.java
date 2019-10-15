@@ -1,21 +1,21 @@
 import java.util.ArrayList;
 
 /**
- * K Sparse recovery data structure that could work over arbitrary integer vectors.
+ * K Sparse recovery data structure.
  * 
  * xiugec 961392
  * Xiuge Chen
  * xiugec@student.unimelb.edu.au
  * @author xiugechen
  */
-public class KSparseRecovery implements ISparseRecovery {
+public abstract class KSR implements ISparseRecovery {
 	/** Output message when there is 0 items in the stream */
 	public static final String ZERO_SPARSE = "zero items in the stream";
 	/** Output message when there are more than k items in the stream */
 	public static String MORE_K_SPARSE = "more than k items in the stream";
 	
 	/** 2D array of size log(k/delta) * 2k, each cell contains an instance of One Sparse Recovery structure */
-	private OneSparseRecovery[][] cells;
+	protected ISparseRecovery[][] cells;
 	/** 1D array of size log(k/delta), each cell is a randomly selected pair-wise independent hash function */
 	private IHash[] hashs;
 	/** output domain of the hash functions */
@@ -28,7 +28,7 @@ public class KSparseRecovery implements ISparseRecovery {
 	 * @param k K
 	 * @param delta Error rate
 	 */
-	public KSparseRecovery(int k, double delta) {
+	public KSR(int k, double delta) {
 		int numRows = (int) Math.log(k / delta);
 		this.k = k;
 		this.domain = 2 * k;
@@ -39,12 +39,7 @@ public class KSparseRecovery implements ISparseRecovery {
 			hashs[i] = new KWiseHash(2);
 		}
 		
-		this.cells = new OneSparseRecovery[numRows][domain];
-		for (int i = 0; i < cells.length; i++) {
-			for (int j = 0; j < cells[i].length; j++) {
-				cells[i][j] = new OneSparseRecovery();
-			}
-		}
+		this.cells = new OneSR_General[numRows][domain];
 	}
 
 	@Override
@@ -72,10 +67,10 @@ public class KSparseRecovery implements ISparseRecovery {
 				Object output = cells[i][j].output();
 				
 				// if get MORE_K_SPARSE message, means at least 2 items are hashed into this cell
-				if (output.equals(OneSparseRecovery.MORE_K_SPARSE)) {
+				if (output.equals(OneSR_General.MORE_K_SPARSE)) {
 					lowerboundRow += 2;
 				}
-				else if (!output.equals(OneSparseRecovery.ZERO_SPARSE)) {
+				else if (!output.equals(OneSR_General.ZERO_SPARSE)) {
 					// cast the output object to String of item-frequency pair
 					String[] outputPair = ((String) output).split(",");
 					String item = outputPair[0];

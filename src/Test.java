@@ -7,9 +7,13 @@
  * @author xiugechen
  */
 public class Test {
+	private static final String INSERTION_ONLY = "insertion-only";
+	private static final String TURNSTILE = "turnstile";
+	private static final String GENERAL = "general";
+	
 	public static void main(String[] args) {
 		KWiseHashTest();
-		// L0SamplerTest(false);
+		// L0SamplerTest(GENERAL);
 		// SparseRecoveryTest(1);
 		// SparseRecoveryTest(4);
 	}
@@ -51,9 +55,9 @@ public class Test {
 	
 	/**
 	 * Test whether L0Sampler performs in expectation (uniform selection over insertion-only stream)
-	 * @param insertionOnly Whether the stream is insertion-only
+	 * @param streamType The type of stream, insertion-only, turnstile, or general
 	 */
-	public static void L0SamplerTest(boolean insertionOnly) {
+	public static void L0SamplerTest(String streamType) {
 		// settings
 		int domain = 1000;
 		double epsilon = 0.01;
@@ -69,8 +73,11 @@ public class Test {
 		for (int i = 0; i < numExperiments; i++) {
 			IL0Sampler sampler = null;
 			
-			if (insertionOnly) {
+			if (streamType.equals(INSERTION_ONLY)) {
 				sampler = new L0Sampler_InsertionOnly(domain, epsilon);
+			}
+			else if (streamType.equals(TURNSTILE)) {
+				sampler = new L0Sampler_Turnstile(domain, epsilon);
 			}
 			else {
 				sampler = new L0Sampler_General(domain, epsilon);
@@ -81,7 +88,7 @@ public class Test {
 				int update0 = 1;
 				int update1 = 1;
 				
-				if (!insertionOnly) {
+				if (!streamType.equals(INSERTION_ONLY)) {
 					update0 = StdRandom.uniform(2) == 0 ? 1 : -1;
 					update1 = StdRandom.uniform(2) == 0 ? 1 : -1;
 				}
@@ -98,7 +105,7 @@ public class Test {
 			
 			String output = (String) sampler.output();
 			
-			if (output.equals(L0Sampler_General.FAIL)) {
+			if (output.equals(L0Sampler.FAIL)) {
 				results[2]++;
 			}
 			else if (output.equals("1")) {
@@ -136,10 +143,10 @@ public class Test {
 			
 			for (int l = 0; l < numExperiments; l++) {
 				if (k == 1) {
-					sparseRecovery = new OneSparseRecovery();
+					sparseRecovery = new OneSR_General();
 				} 
 				else {
-					sparseRecovery = new KSparseRecovery(k, delta);
+					sparseRecovery = new KSR_General(k, delta);
 				}
 				
 				for (int j = 0; j < numDraw; j++) {
@@ -152,10 +159,10 @@ public class Test {
 				
 				Object output = sparseRecovery.output();
 				
-				if (output.equals(OneSparseRecovery.ZERO_SPARSE) || output.equals(KSparseRecovery.ZERO_SPARSE)) {
+				if (output.equals(OneSR_General.ZERO_SPARSE) || output.equals(KSR.ZERO_SPARSE)) {
 					zeroCount++;
 				}
-				else if (output.equals(OneSparseRecovery.MORE_K_SPARSE) || output.equals(KSparseRecovery.MORE_K_SPARSE)) {
+				else if (output.equals(OneSR_General.MORE_K_SPARSE) || output.equals(KSR.MORE_K_SPARSE)) {
 					moreCount++;
 				}
 				else {

@@ -8,14 +8,14 @@ import org.apache.log4j.Logger;
  * xiugec@student.unimelb.edu.au
  * @author xiugechen
  */
-public class OneSparseRecovery implements ISparseRecovery {
+public class OneSR_General implements ISparseRecovery {
 	/** Output message when there is 0 items in the stream */
 	public static final String ZERO_SPARSE = "zero items in the stream";
 	/** Output message when there are more than k items in the stream */
 	public static final String MORE_K_SPARSE = "more than one items in the stream";
 	
 	/** logger */
-	private final static Logger logger = Logger.getLogger(OneSparseRecovery.class);
+	private final static Logger logger = Logger.getLogger(OneSR_General.class);
 	/** large enough prime */
 	private final int P = Integer.MAX_VALUE;
 	
@@ -31,7 +31,7 @@ public class OneSparseRecovery implements ISparseRecovery {
 	/**
 	 * Constructor
 	 */
-	public OneSparseRecovery() {
+	public OneSR_General() {
 		this.iota = 0;
 		this.phi = 0;
 		this.tau = 0;
@@ -41,7 +41,6 @@ public class OneSparseRecovery implements ISparseRecovery {
 	@Override
 	public void update(Object item, int update) {
 		int itemNum = -1;
-		long new_update = (long) update;
 		
 		try {
 			itemNum = Integer.parseInt(item.toString());
@@ -52,7 +51,7 @@ public class OneSparseRecovery implements ISparseRecovery {
 		
 		this.phi += update;
 		this.iota += update * itemNum;
-		this.tau += (long) ((long) new_update * powMod(z, itemNum, this.P));
+		this.tau += (long) ((long) update * powMod(z, itemNum, this.P));
 	}
 	
 	@Override
