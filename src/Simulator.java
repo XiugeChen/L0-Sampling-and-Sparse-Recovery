@@ -50,6 +50,7 @@ public class Simulator {
 		IL0Sampler sampler = new L0Sampler_InsertionOnly(DOMAIN, ERROR);
 		//IL0Sampler sampler = new L0Sampler_General(DOMAIN, BAD_PROB);
 		//IL0Sampler sampler = new L0Sampler_Turnstile(DOMAIN, BAD_PROB);
+		//IL0Sampler sampler = new L0Sampler_Pairwise_General(DOMAIN, ERROR, BAD_PROB);
 		
 		for (int i = 0; i < NUM_EXPERIMENT; i++) {
 			time = runOne(sampler);
@@ -65,6 +66,7 @@ public class Simulator {
 		IL0Sampler sampler = new L0Sampler_InsertionOnly(DOMAIN, ERROR);
 		//IL0Sampler sampler = new L0Sampler_General(DOMAIN, BAD_PROB);
 		//IL0Sampler sampler = new L0Sampler_Turnstile(DOMAIN, BAD_PROB);
+		//IL0Sampler sampler = new L0Sampler_Pairwise_General(DOMAIN, ERROR, BAD_PROB);
 		time = runOne(sampler);
 
 		while (true) {}
@@ -95,6 +97,7 @@ public class Simulator {
 			L0Sampler_InsertionOnly insertionOnly = new L0Sampler_InsertionOnly(domain, ERROR);
 			L0Sampler_General general = new L0Sampler_General(domain, BAD_PROB);
 			L0Sampler_Turnstile turnstile = new L0Sampler_Turnstile(domain, BAD_PROB);
+			L0Sampler_Pairwise_General pairwise = new L0Sampler_Pairwise_General(domain, ERROR, BAD_PROB);
 			
 			// updating data
 			try (LineNumberReader fp = new LineNumberReader(new FileReader(new File(filePath)))) {
@@ -110,9 +113,10 @@ public class Simulator {
 						Object result_insertionOnly = insertionOnly.output();
 						Object result_general = general.output();
 						Object result_turnstile = turnstile.output();
+						Object result_pairwise = pairwise.output();
 
-						String output = String.format("insertionOnly:%s,general:%s,turnstile:%s\n", result_insertionOnly.toString(), 
-								result_general.toString(), result_turnstile.toString());
+						String output = String.format("insertionOnly:%s,general:%s,turnstile:%s,pairwise:%s\n", result_insertionOnly.toString(), 
+								result_general.toString(), result_turnstile.toString(), result_pairwise.toString());
 						fw.write(output);
 					}
 					// update sketch
@@ -124,6 +128,7 @@ public class Simulator {
 						insertionOnly.update(sample, update);
 						general.update(sample, update);
 						turnstile.update(sample, update);
+						pairwise.update(sample, update);
 					}
 				}
 				
