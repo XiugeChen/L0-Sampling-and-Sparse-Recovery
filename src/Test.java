@@ -16,10 +16,20 @@ public class Test {
 		System.out.println("####INFO: Test starts");
 		
 		// KWiseHashTest();
-		L0SamplerTest(PAIRWISE);
+		// L0SamplerTest(GENERAL);
 		// SparseRecoveryTest(1);
 		// SparseRecoveryTest(4);
 		// DistinctElementTest(9009);
+		
+		for (int k = 0; k < 10; k++) {
+			L0Sampler_InsertionOnly sampler =  new L0Sampler_InsertionOnly(100, 0.01);
+		
+			for (int i = 1; i <= 10; i++) {
+				sampler.update(Integer.toString(i), 1);
+			}
+		
+			System.out.println(sampler.output().toString());
+		}
 		
 		System.out.println("####INFO: Test ends");
 	}

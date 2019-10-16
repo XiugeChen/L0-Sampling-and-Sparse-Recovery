@@ -1,5 +1,3 @@
-import org.apache.log4j.Logger;
-
 /**
  * L0 sampler template
  * 
@@ -9,8 +7,6 @@ import org.apache.log4j.Logger;
  * @author xiugechen
  */
 public abstract class L0Sampler implements IL0Sampler {
-	/** logger */
-	private final static Logger logger = Logger.getLogger(L0Sampler.class);
 	/** Fail message */
 	public final static String FAIL = "FAIL";
 	
@@ -26,7 +22,7 @@ public abstract class L0Sampler implements IL0Sampler {
 	public L0Sampler(int domain, double delta) {
 		// check if n^3 is still smaller than Max int
 		if (Integer.MAX_VALUE < Math.pow(domain, 3)) {
-			logger.fatal("domain can't be larger than the quartic root of largest integer value");
+			System.out.println("####FATAL: domain can't be larger than the quartic root of largest integer value");
 			System.exit(1);
 		}
 		

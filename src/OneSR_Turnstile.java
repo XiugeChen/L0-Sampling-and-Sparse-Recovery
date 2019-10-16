@@ -1,5 +1,3 @@
-import org.apache.log4j.Logger;
-
 /**
  * 1 Sparse recovery data structure that could work over only turnstile stream.
  * 
@@ -13,9 +11,6 @@ public class OneSR_Turnstile implements ISparseRecovery {
 	public static final String ZERO_SPARSE = "zero items in the stream";
 	/** Output message when there are more than k items in the stream */
 	public static final String MORE_K_SPARSE = "more than one items in the stream";
-	
-	/** logger */
-	private final static Logger logger = Logger.getLogger(OneSR_General.class);
 	
 	/** the sum of frequencies in stream */
 	private long F1;
@@ -40,7 +35,7 @@ public class OneSR_Turnstile implements ISparseRecovery {
 		try {
 			itemNum = Integer.parseInt(item.toString());
 		} catch (Exception e) {
-			logger.warn("Directly parse item to int failed, use default 1");
+			System.out.println("####WARN: Directly parse item to int failed, use default 1");
 			itemNum = 1;
 		}
 		

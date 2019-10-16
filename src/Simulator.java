@@ -15,8 +15,8 @@ public class Simulator {
 	private static final String FILE_PATH = "resources/data/dataWithUpdate/space_time_test.txt";
 	private static final double ERROR = 0.01;
 	private static final double BAD_PROB = 0.01;
-	private static final int DOMAIN = Integer.MAX_VALUE;
-	private static final int NUM_EXPERIMENT = 10000;
+	private static final int DOMAIN = 100;
+	private static final int NUM_EXPERIMENT = 1000;
 
 	public static void main(String[] args) {
 		System.out.println("Simulation starts");
@@ -26,8 +26,7 @@ public class Simulator {
 			List<String> result = walk.map(x -> x.toString())
 					.filter(f -> f.endsWith(".txt"))
 					.filter(f -> !f.contains("result"))
-					.filter(f -> !f.contains("test"))
-					.filter(f -> !f.contains("88888"))
+					//.filter(f -> !f.contains("test"))
 					.collect(Collectors.toList());
 
 			for (String file: result) {
@@ -77,8 +76,7 @@ public class Simulator {
 		// create output file
 		String output_file = filePath;
 		output_file = output_file.replaceAll("dataWithUpdate", "dataWithUpdate/result");
-		output_file = output_file.replaceAll(".txt", "_runningResult_domain"
-				+ domain + "_delta" + BAD_PROB + ".txt");
+		output_file = output_file.replaceAll(".txt", "_runningResult.txt");
 		
 		File file = new File(output_file);
 		FileWriter fw = null;
@@ -92,8 +90,6 @@ public class Simulator {
 		
 		
 		for (int i = 0; i < numExperiment; i++) {
-			System.out.println("####INFO: start running experiment: " + i);
-		
 			L0Sampler_InsertionOnly insertionOnly = new L0Sampler_InsertionOnly(domain, ERROR);
 			L0Sampler_General general = new L0Sampler_General(domain, BAD_PROB);
 			L0Sampler_Turnstile turnstile = new L0Sampler_Turnstile(domain, BAD_PROB);
@@ -106,18 +102,10 @@ public class Simulator {
 				while ((s = fp.readLine()) != null) {
 					// query sketch
 					if (s.startsWith("#")) {
-						if (s.contains("####"))
-							continue;
-
-						// query items
-						Object result_insertionOnly = insertionOnly.output();
-						Object result_general = general.output();
-						Object result_turnstile = turnstile.output();
-						Object result_pairwise = pairwise.output();
-
-						String output = String.format("insertionOnly:%s,general:%s,turnstile:%s,pairwise:%s\n", result_insertionOnly.toString(), 
-								result_general.toString(), result_turnstile.toString(), result_pairwise.toString());
-						fw.write(output);
+						if (i == 0) {
+							fw.write(s);
+							fw.write("\n");
+						}
 					}
 					// update sketch
 					else {
@@ -132,12 +120,25 @@ public class Simulator {
 					}
 				}
 				
+				// query items
+				Object result_insertionOnly = insertionOnly.output();
+				Object result_general = general.output();
+				Object result_turnstile = turnstile.output();
+				Object result_pairwise = pairwise.output();
+
+				String output = String.format("insertionOnly:%s,general:%s,turnstile:%s,pairwise:%s\n", result_insertionOnly.toString(), 
+						result_general.toString(), result_turnstile.toString(), result_pairwise.toString());
+				fw.write(output);
+				
 				fp.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
-			System.out.println("####INFO: finish experiment: " + i);
+			// update progress
+			if (i % (numExperiment / 10) == 0) {
+				System.out.println("Finish experiment: " + i);
+			}
 		}
 		
 		try {
@@ -161,9 +162,6 @@ public class Simulator {
             while ((s = fp.readLine()) != null) {
             	// query sketch
             	if (s.startsWith("#")) {
-            		if (s.contains("####"))
-            			continue;
-
             		// query items
             		long start = System.nanoTime();
             		l0Sampler.output();

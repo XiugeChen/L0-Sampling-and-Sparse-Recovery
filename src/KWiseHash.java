@@ -1,5 +1,3 @@
-import org.apache.log4j.Logger;
-
 /**
  * A hash function draw from k-wise independent hash family on the domain {1, . . . , p}, 
  * where p is the largest value of integer (2^31 - 1) in java, k must be between [0, 2^31 - 1].
@@ -11,8 +9,6 @@ import org.apache.log4j.Logger;
  * @author xiugechen
  */
 public class KWiseHash implements IHash {
-	/** logger */
-	private final static Logger logger = Logger.getLogger(KWiseHash.class);
 	/** large enough prime number p */
 	private final static int P = 2147483647;
 	/** coefficients of polynomial hashing */
@@ -25,7 +21,7 @@ public class KWiseHash implements IHash {
 	public KWiseHash(int k) {
 		// parameter checking
 		if (k < 0) {
-			logger.fatal("k must be between [0, 2^31 - 1]");
+			System.out.println("####FATAL: k must be between [0, 2^31 - 1]");
 			System.exit(1);
 		}
 		
@@ -41,12 +37,12 @@ public class KWiseHash implements IHash {
 	public int hash(Object key, int domain) {
 		// parameter checking
 		if (domain < 0) {
-			logger.fatal("Domain has to be between [0, 2^31 - 1]");
+			System.out.println("####FATAL: Domain has to be between [0, 2^31 - 1]");
 			System.exit(1);
 		}
 		
 		if (a == null) {
-			logger.fatal("Hash function uninitialized");
+			System.out.println("####FATAL: Hash function uninitialized");
 			System.exit(1);
 		}
 		
@@ -55,9 +51,27 @@ public class KWiseHash implements IHash {
 		// get Polynomial Hashing results
 		long results = 0;
 		for (int i = 0; i < a.length; i++) {
-			results += (a[i] * Math.pow(key_int, i)) % P;
+			results += (a[i] * powMod(key_int, i, P)) % P;
 		}
 		
 		return (int) ((results % P) % domain);
+	}
+	
+	/**
+	 * Calculate the result of the power of some int number mod another number
+	 * This implementation avoids potential overflow
+	 * @param base Base number, int
+	 * @param power Power number, int
+	 * @param modNum Number used to mod, int
+	 * @return base^power mod modNum
+	 */
+	private long powMod(int base, int power, int modNum) {
+		long result = 1;
+		for (int i = 0; i < power; i++) {
+			result *= base;
+			result %= modNum;
+		}
+		
+		return result;
 	}
 }

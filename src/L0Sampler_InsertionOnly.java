@@ -1,5 +1,3 @@
-import org.apache.log4j.Logger;
-
 /**
  * L0 sampler that is designed to deal with insertion-only stream (only positive update allowed)
  * General stream could be test on this sampler but the performance is not ideal
@@ -10,8 +8,6 @@ import org.apache.log4j.Logger;
  * @author xiugechen
  */
 public class L0Sampler_InsertionOnly implements IL0Sampler {
-	/** logger */
-	private final static Logger logger = Logger.getLogger(L0Sampler_InsertionOnly.class);
 	/** smallest hashed value being tracked */
 	private long m;
 	/** object that has the smallest hashed value */
@@ -39,8 +35,8 @@ public class L0Sampler_InsertionOnly implements IL0Sampler {
 	public void update(Object item, int update) {
 		// if negative update output warnings
 		if (update < 0) {
-			logger.warn("L0Sampler_InsertionOnly is designed to handle insertion-only stream"
-					+ ", negative update will affect the performance");
+			//System.out.println("####WARN: L0Sampler_InsertionOnly is designed to handle insertion-only stream"
+			//		+ ", negative update will affect the performance");
 		}
 		
 		// Store the item if it has the minimum hashed value

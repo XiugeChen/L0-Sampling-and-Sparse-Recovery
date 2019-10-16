@@ -1,5 +1,3 @@
-import org.apache.log4j.Logger;
-
 /**
  * 1 Sparse recovery data structure that could work over arbitrary integer vectors.
  * 
@@ -14,8 +12,6 @@ public class OneSR_General implements ISparseRecovery {
 	/** Output message when there are more than k items in the stream */
 	public static final String MORE_K_SPARSE = "more than one items in the stream";
 	
-	/** logger */
-	private final static Logger logger = Logger.getLogger(OneSR_General.class);
 	/** large enough prime */
 	private final int P = Integer.MAX_VALUE;
 	
@@ -45,7 +41,7 @@ public class OneSR_General implements ISparseRecovery {
 		try {
 			itemNum = Integer.parseInt(item.toString());
 		} catch (Exception e) {
-			logger.warn("Directly parse item to int failed, use default 1");
+			System.out.println("####WARN: Directly parse item to int failed, use default 1");
 			itemNum = 1;
 		}
 		
