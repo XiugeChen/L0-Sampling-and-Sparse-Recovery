@@ -21,7 +21,7 @@ public class DataGenerator {
 		System.out.println("Initialization started");
 		// initialization
 		DataGenerator dataGenerator = new DataGenerator();
-		double[] zipfS = {1.2}; // 0.0, 0.6, 1.2};
+		double[] zipfS = {0.3, 0.6, 0.9, 1.2, 1.5};
 		
 		ArrayList<Integer> uniqueNumItems = new ArrayList<>();
 		for (int i = 2; i < 3; i += 2) {

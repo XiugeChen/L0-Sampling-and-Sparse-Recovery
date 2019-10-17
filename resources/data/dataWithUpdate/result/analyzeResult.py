@@ -88,7 +88,7 @@ def analyze(file, w_fp, num_items):
     #print(expected_count)
     #print(baseline1_count)
 
-    norm_term = distinct_count / total_count
+    norm_term = 1
 
     # get deviation
     l0Insert_dev, l0Insert_pure_count = [], []
