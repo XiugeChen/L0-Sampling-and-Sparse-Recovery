@@ -141,6 +141,10 @@ def analyze(file, w_fp, num_items):
     w_fp.write("insertionOnly:" + str(l0Insert_avg_dev) + ",general:" + str(l0General_avg_dev) + ",turnstile:" + str(l0Turnstile_avg_dev) + ",pairwise:" + str(l0Pairwise_avg_dev) + ",baseline1:" + str(baseline1_avg_dev) + "\n")
     w_fp.write("percentile_dev,")
     w_fp.write("insertionOnly:" + str(l0Insert_percentile_dev) + ",general:" + str(l0General_percentile_dev) + ",turnstile:" + str(l0Turnstile_percentile_dev) + ",pairwise:" + str(l0Pairwise_percentile_dev) +  ",baseline1:" + str(baseline1_percentile_dev) + "\n")
+    w_fp.write("error_rate,")
+    w_fp.write("insertionOnly:" + str(l0Insert_error / total_count) + ",general:" + str(l0General_error / total_count) + ",turnstile:" + str(l0Turnstile_error / total_count) + ",pairwise:" + str(l0Pairwise_error / total_count) +  ",baseline1:" + str(0.0) + "\n")
+    w_fp.write("false_rate,")
+    w_fp.write("insertionOnly:" + str(l0Insert_fail / total_count) + ",general:" + str(l0General_fail / total_count) + ",turnstile:" + str(l0Turnstile_fail / total_count) + ",pairwise:" + str(l0Pairwise_fail / total_count) +  ",baseline1:" + str(0.0) + "\n")
     w_fp.write("uniqueNum," + str(distinct_count) + "\n")
 
 # get all data files in source directory
