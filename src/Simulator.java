@@ -16,7 +16,7 @@ public class Simulator {
 	private static final double ERROR = 0.01;
 	private static final double BAD_PROB = 0.01;
 	private static final int DOMAIN = 100;
-	private static final int NUM_EXPERIMENT = 10000;
+	private static final int NUM_EXPERIMENT = 5000;
 
 	public static void main(String[] args) {
 		System.out.println("Simulation starts");

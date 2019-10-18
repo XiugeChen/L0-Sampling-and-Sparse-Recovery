@@ -16,19 +16,25 @@ public class Test {
 		System.out.println("####INFO: Test starts");
 		
 		// KWiseHashTest();
-		// L0SamplerTest(GENERAL);
+		// L0SamplerTest(INSERTION_ONLY);
 		// SparseRecoveryTest(1);
 		// SparseRecoveryTest(4);
 		// DistinctElementTest(9009);
 		
-		for (int k = 0; k < 10; k++) {
+		int[] results = new int[10];
+		for (int k = 0; k < 1000; k++) {
 			L0Sampler_InsertionOnly sampler =  new L0Sampler_InsertionOnly(100, 0.01);
 		
 			for (int i = 1; i <= 10; i++) {
 				sampler.update(Integer.toString(i), 1);
 			}
+			
+			results[Integer.parseInt(sampler.output().toString()) - 1] += 1;
+			// System.out.println(sampler.output().toString());
+		}
 		
-			System.out.println(sampler.output().toString());
+		for (int i = 0; i < results.length; i++) {
+			System.out.println(i + ": " + results[i]);
 		}
 		
 		System.out.println("####INFO: Test ends");
