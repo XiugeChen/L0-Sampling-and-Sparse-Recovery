@@ -15,13 +15,13 @@ import org.apache.commons.math3.distribution.ZipfDistribution;
  */
 public class DataGenerator {
 	private static String DIC_PATH = "resources/data/";
-	private static int STREAM_LEN = (int) Math.pow(10, 3);
+	private static int STREAM_LEN = (int) (1 * Math.pow(10, 3));
 	
 	public static void main(String[] args) {
 		System.out.println("Initialization started");
 		// initialization
 		DataGenerator dataGenerator = new DataGenerator();
-		double[] zipfS = {0.3, 0.6, 0.9, 1.2, 1.5};
+		double[] zipfS = {0.9};
 		
 		ArrayList<Integer> uniqueNumItems = new ArrayList<>();
 		for (int i = 2; i < 3; i += 2) {

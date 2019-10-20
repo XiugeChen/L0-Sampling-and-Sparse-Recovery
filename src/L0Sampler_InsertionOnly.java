@@ -9,7 +9,7 @@
  */
 public class L0Sampler_InsertionOnly implements IL0Sampler {
 	/** smallest hashed value being tracked */
-	private long m;
+	private int m;
 	/** object that has the smallest hashed value */
 	private Object a;
 	/** hash function being used, randomly select at initialization */
@@ -25,7 +25,7 @@ public class L0Sampler_InsertionOnly implements IL0Sampler {
 	 * @param eplison ε for ε-min-wise independent hash family)
 	 */
 	public L0Sampler_InsertionOnly(int n, double eplison) {
-		this.m = (long) n + 1;
+		this.m = n + 1;
 		this.domain = n;
 		this.a = null;
 		hash = new KWiseHash((int) (1 / eplison));

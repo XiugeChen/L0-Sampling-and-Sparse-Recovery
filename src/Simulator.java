@@ -16,7 +16,7 @@ public class Simulator {
 	private static final double ERROR = 0.01;
 	private static final double BAD_PROB = 0.01;
 	private static final int DOMAIN = 100;
-	private static final int NUM_EXPERIMENT = 5000;
+	private static final int NUM_EXPERIMENT = 1000;
 
 	public static void main(String[] args) {
 		System.out.println("Simulation starts");
@@ -40,15 +40,15 @@ public class Simulator {
 		}
 
 		System.out.println("Simulation ends");
-
+		
 		/*
 		// run specific L0 sampler to measure the time
 		double[] time = {0.0, 0.0};
 		double[] total_time = {0.0, 0.0};
 		
-		IL0Sampler sampler = new L0Sampler_InsertionOnly(DOMAIN, ERROR);
+		//IL0Sampler sampler = new L0Sampler_InsertionOnly(DOMAIN, ERROR);
 		//IL0Sampler sampler = new L0Sampler_General(DOMAIN, BAD_PROB);
-		//IL0Sampler sampler = new L0Sampler_Turnstile(DOMAIN, BAD_PROB);
+		IL0Sampler sampler = new L0Sampler_Turnstile(DOMAIN, BAD_PROB);
 		//IL0Sampler sampler = new L0Sampler_Pairwise_General(DOMAIN, ERROR, BAD_PROB);
 		
 		for (int i = 0; i < NUM_EXPERIMENT; i++) {
@@ -158,7 +158,6 @@ public class Simulator {
 		// updating data
 		try (LineNumberReader fp = new LineNumberReader(new FileReader(new File(FILE_PATH)))) {
             String s;
-            System.out.println("####INFO: started reading and querying");
             while ((s = fp.readLine()) != null) {
             	// query sketch
             	if (s.startsWith("#")) {
@@ -182,10 +181,8 @@ public class Simulator {
             		numUpdate++;
             	}
             }
-            System.out.println("####INFO: finishing reading and querying");
 
             fp.close();
-            System.out.println("####INFO: end application");
 
             double result[] = {0.0, 0.0};
             result[0] = (double) totalTimeUpdate / numUpdate;

@@ -38,7 +38,6 @@ public abstract class KSR implements ISparseRecovery {
 		for (int i = 0; i < numRows; i++) {
 			hashs[i] = new KWiseHash(2);
 		}
-		
 		this.cells = new ISparseRecovery[numRows][domain];
 	}
 

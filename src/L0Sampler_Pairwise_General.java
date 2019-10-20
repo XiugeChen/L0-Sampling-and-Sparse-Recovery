@@ -37,7 +37,7 @@ public class L0Sampler_Pairwise_General implements IL0Sampler {
 			for (int j = 0; j < numCol; j++) {
 				oneSRs[i][j] = new OneSR_General();
 				alphas[i][j] = 0; 
-				hashs[i][j] = new KWiseHash(5);
+				hashs[i][j] = new KWiseHash(2);
 			}
 		}
 	}
